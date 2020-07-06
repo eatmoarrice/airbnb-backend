@@ -6,6 +6,7 @@ const pageSizes = 10;
 exports.getAllExperience = async (request, response) => {
 	try {
 		const pageNumber = request.query.page || 1;
+		console.log("num", pageNumber);
 		const minPrice = parseInt(request.query.minPrice) || 1;
 		const maxPrice = parseInt(request.query.maxPrice) || 1000;
 
