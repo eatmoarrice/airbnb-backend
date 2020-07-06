@@ -1,17 +1,31 @@
 const Experience = require("../models/experienceModel");
 const { response } = require("express");
+// const { parse } = require("dotenv/types");
+const pageSizes = 10;
 
 exports.getAllExperience = async (request, response) => {
 	try {
-		const pageNumber = request.query.pageNumber;
-		const experienceList = await Experience.find({})
-			.limit(25)
-			.skip((pageNumber - 1) * 25);
+		const pageNumber = request.query.pageNumber || 1;
+		const minPrice = parseInt(request.query.minPrice) || 1;
+		const maxPrice = parseInt(request.query.maxPrice) || 1000;
+
+		const experienceList = await Experience.find({
+			price: { $gt: minPrice, $lt: maxPrice }
+		})
+			.limit(pageSizes)
+			.skip((pageNumber - 1) * pageSizes);
 		console.log(pageNumber);
-		response.status(200).json({
-			status: "success",
-			data: experienceList
-		});
+
+		const numDocuments = await Experience.countDocuments();
+
+		response
+			.status(200)
+			.json({
+				status: "success",
+				data: experienceList,
+				maxPageNum: Math.ceil(numDocuments / pageSizes)
+			})
+			.send(experienceList);
 	} catch (error) {
 		return response.status(400).json({
 			status: "Fail",
@@ -61,18 +75,6 @@ exports.findOneExperience = async (request, response) => {
 	}
 };
 
-// exports.updateExperience = async (request, response) => {
-//     try {
-
-//     } catch (error) {
-// response.status(400).json({
-//     status: "Fail",
-//     message: error.message
-// })
-//     }
-// }
-
-// hok hieu ne
 exports.updateExperience = async (request, response, next) => {
 	const exp = await Experience.findOne({ _id: request.params.experienceId });
 	if (!exp) {
