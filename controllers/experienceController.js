@@ -67,14 +67,11 @@ exports.findOneExperience = async (request, response) => {
 		if (!exp) throw new Error("No experience here");
 		else {
 			const owner = await User.findOne({ _id: exp.owner });
-			exp.ownerInfo = {};
-			exp.ownerInfo.name = owner.name;
-			exp.ownerInfo.introduction = owner.introduction;
-			exp.ownerInfo.avatar = owner.avatar;
 		}
+		console.log(exp);
 		response.status(200).json({
 			status: "Success",
-			data: exp
+			data: { exp, owner }
 		});
 	} catch (error) {
 		response.status(400).json({
