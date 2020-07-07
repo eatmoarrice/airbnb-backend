@@ -66,7 +66,7 @@ exports.findOneExperience = async (request, response) => {
 		const exp = await Experience.findOne({ _id: request.params.experienceId });
 		if (!exp) throw new Error("No experience here");
 		else {
-			const owner = await User.findOne({ _id: owner });
+			const owner = await User.findOne({ _id: exp.owner });
 			exp.ownerInfo = {};
 			exp.ownerInfo.name = owner.name;
 			exp.ownerInfo.introduction = owner.introduction;
