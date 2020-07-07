@@ -63,16 +63,16 @@ exports.createExperience = async (request, response) => {
 exports.findOneExperience = async (request, response) => {
 	try {
 		// why params
-		const owner = {};
+
 		const exp = await Experience.findOne({ _id: request.params.experienceId });
 		if (!exp) throw new Error("No experience here");
-		else {
-			owner = await User.findOne({ _id: exp.owner });
-		}
+
+		const owner = await User.findOne({ _id: exp.owner });
+
 		console.log(exp);
 		response.status(200).json({
 			status: "Success",
-			data: { exp: exp, ownerInfo: owner }
+			data: { ...exp, ...owner }
 		});
 	} catch (error) {
 		response.status(400).json({
