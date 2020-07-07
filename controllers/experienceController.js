@@ -72,7 +72,7 @@ exports.findOneExperience = async (request, response) => {
 		console.log(exp);
 		response.status(200).json({
 			status: "Success",
-			data: { ...exp, ...owner }
+			data: { exp: exp, ownerInfo: owner }
 		});
 	} catch (error) {
 		response.status(400).json({
