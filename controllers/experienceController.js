@@ -1,4 +1,5 @@
 const Experience = require("../models/experienceModel");
+const User = require("../models/user");
 const { response } = require("express");
 // const { parse } = require("dotenv/types");
 const pageSizes = 30;
@@ -11,7 +12,7 @@ exports.getAllExperience = async (request, response) => {
 		const maxPrice = parseInt(request.query.maxPrice) || 1000;
 
 		const experienceList = await Experience.find({
-			price: { $gt: minPrice, $lt: maxPrice }
+			price: { $gte: minPrice, $lte: maxPrice }
 		})
 			.limit(pageSizes)
 			.skip((pageNumber - 1) * pageSizes);
@@ -64,6 +65,13 @@ exports.findOneExperience = async (request, response) => {
 		// why params
 		const exp = await Experience.findOne({ _id: request.params.experienceId });
 		if (!exp) throw new Error("No experience here");
+		else {
+			owner = await User.findOne({ _id: owner });
+			exp.ownerInfo = {};
+			exp.ownerInfo.name = owner.name;
+			exp.ownerInfo.introduction = owner.introduction;
+			exp.ownerInfo.avatar = owner.avatar;
+		}
 		response.status(200).json({
 			status: "Success",
 			data: exp

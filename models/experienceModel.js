@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const experienceSchema = mongoose.Schema(
 	{
+		owner: mongoose.Types.ObjectId,
 		title: {
 			type: String,
 			require: [true, "title is required"],
