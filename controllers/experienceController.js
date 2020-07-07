@@ -1,7 +1,7 @@
 const Experience = require("../models/experienceModel");
 const { response } = require("express");
 // const { parse } = require("dotenv/types");
-const pageSizes = 10;
+const pageSizes = 30;
 
 exports.getAllExperience = async (request, response) => {
 	try {
